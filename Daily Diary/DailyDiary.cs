@@ -9,6 +9,8 @@ namespace DiaryManager
     {
         private  string filePath;
         public List<Entry> entries;
+        public bool isRead;
+        public bool isAdded;
 
         public object Entries { get; set; }
 
@@ -16,8 +18,11 @@ namespace DiaryManager
         {
             this.filePath = filePath;
             this.entries = new List<Entry>();
+            isAdded = false;
+            isRead =false;
             LoadEntries();
         }
+       
 
         public void Run()
         {
@@ -37,59 +42,70 @@ namespace DiaryManager
                 switch (choice)
                 {
                     case "1":
-                        Console.Clear(); 
-                        ReadDiaryFile();
+                        //Console.Clear(); 
+                        isRead = ReadDiaryFile();
                         break;
                     case "2":
-                        Console.Clear();
-                        AddEntry();
+                        Console.WriteLine("\nEnter the date (YYYY-MM-DD):");
+                        string dateInput = Console.ReadLine();
+                        Console.WriteLine("Enter the content:");
+                        string content = Console.ReadLine();
+                        //Console.Clear();
+                        AddEntry(dateInput, content);
                         break;
                     case "3":
-                        Console.Clear();
+                        //Console.Clear();
                         DeleteEntry();
                         break;
                     case "4":
-                        Console.Clear();
-                        CountEntries();
+                        //Console.Clear();
+                        try
+                        {
+                            Console.WriteLine($"\nTotal entries: {CountEntries()}");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"\nAn error occurred while counting the entries: {ex.Message}");
+                        }
+                        
                         break;
                     case "5":
-                        Console.Clear();
+                        //Console.Clear();
                         SearchEntries();
                         break;
                     case "6":
                         return;
                     default:
-                        Console.Clear();
+                        //Console.Clear();
                         Console.WriteLine("Invalid choice. Try again.");
                         break;
                 }
             }
         }
 
-        public void ReadDiaryFile()
+        public bool ReadDiaryFile()
         {
             if (entries.Count == 0)
             {
                 Console.WriteLine("The diary is empty.");
-                return;
+                return false;
             }
-
+            else
             foreach (var entry in entries)
             {
-                Console.Write($"\nDate : {entry.Date:yyyy-MM-dd} ,content : ");
-                Console.WriteLine(entry.Content);
-                Console.WriteLine();
+                Console.Write($"{entry.Date}\n{entry.Content}\n");
+                   
             }
+ return true;
+           
         }
 
-        public void AddEntry()
+
+        public void AddEntry(string dateInput, string content)
         {
             try
             {
-                Console.WriteLine("\nEnter the date (YYYY-MM-DD):");
-                string dateInput = Console.ReadLine();
-                Console.WriteLine("Enter the content:");
-                string content = Console.ReadLine();
+               
 
                 if (!DateTime.TryParse(dateInput, out DateTime date))
                 {
@@ -106,10 +122,12 @@ namespace DiaryManager
                 Console.WriteLine(" A     A  D    D  D    D  E        D    D");
                 Console.WriteLine(" A     A  D    D  D    D  E        D    D");
                 Console.WriteLine(" A     A  DDDDD   DDDDD   EEEEEE   DDDDD");
+                isAdded = true;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"An error occurred while adding the entry: {ex.Message}");
+                isAdded = false;
             }
         }
 
@@ -145,16 +163,9 @@ namespace DiaryManager
             }
         }
 
-        public void CountEntries()
+        public int CountEntries()
         {
-            try
-            {
-                Console.WriteLine($"\nTotal entries: {entries.Count}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"\nAn error occurred while counting the entries: {ex.Message}");
-            }
+            return entries.Count;
         }
 
         public void SearchEntries()

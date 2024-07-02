@@ -16,14 +16,6 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5" />
   </ItemGroup>
 
-	<ItemGroup>
-		<None Update ="testFilePath.txt">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-
-
-	</ItemGroup>
-
 	
   <ItemGroup>
     <ProjectReference Include="..\Daily Diary\Daily Diary.csproj" />
